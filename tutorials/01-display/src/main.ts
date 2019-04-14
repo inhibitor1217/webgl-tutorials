@@ -1,5 +1,5 @@
-const canvas = document.getElementById('canvas');
-const gl = canvas.getContext('webgl');
+const canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('canvas');
+const gl: WebGL2RenderingContext = canvas.getContext('webgl2');
 
 if (gl) {
 
