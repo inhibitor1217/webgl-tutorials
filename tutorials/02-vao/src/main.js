@@ -1,5 +1,5 @@
 const canvas = document.getElementById('canvas');
-const gl = canvas.getContext('webgl');
+const gl = canvas.getContext('webgl2');
 
 if (gl) {
 
