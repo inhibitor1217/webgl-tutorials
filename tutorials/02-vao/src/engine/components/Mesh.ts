@@ -33,7 +33,6 @@ export default class Mesh {
         this._vbo = this._gl.createBuffer();
         this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._vbo);
         this._gl.bufferData(this._gl.ARRAY_BUFFER, this._vertexBuffer, this._gl.STATIC_DRAW);
-        this._gl.bindBuffer(this._gl.ARRAY_BUFFER, null);
 
         /* Generate VAO. */
         this._vao = this._gl.createVertexArray();
@@ -45,6 +44,8 @@ export default class Mesh {
             this._gl.vertexAttribPointer(Number(index), size, type, false, vertexBufferSize, vertexBufferOffset);
             vertexBufferOffset += 4 * size;
         }
+
+        this._gl.bindBuffer(this._gl.ARRAY_BUFFER, null);
         this._gl.bindVertexArray(null);
     }
 
