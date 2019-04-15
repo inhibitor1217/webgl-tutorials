@@ -1,3 +1,3 @@
-## Tutorial 03: Index Buffer
+## Tutorial 04: Shader
 
-![image](tutorial3-figure.PNG)
+![image](tutorial4-figure.PNG)
