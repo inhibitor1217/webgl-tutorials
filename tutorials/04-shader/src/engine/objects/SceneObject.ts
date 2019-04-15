@@ -1,5 +1,5 @@
-import Mesh from '../components/Mesh';
-import Material from '../components/Material';
+import Mesh from 'engine/components/Mesh';
+import Material from 'engine/components/materials/Material';
 
 export default class SceneObject {
 

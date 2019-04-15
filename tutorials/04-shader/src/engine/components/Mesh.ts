@@ -1,4 +1,3 @@
-import { vertexShader } from "engine/res/DefaultMaterialShaders";
 
 export default class Mesh {
 
