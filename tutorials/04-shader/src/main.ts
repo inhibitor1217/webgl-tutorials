@@ -62,7 +62,7 @@ if (gl) {
     mesh1.release();
     mesh2.release();
     defaultMaterial.release();
-    defaultMaterial.release();
+    vertexColorMaterial.release();
 
 } else {
     console.log('WebGL not supported in this browser.');
