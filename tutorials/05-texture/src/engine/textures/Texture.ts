@@ -10,29 +10,21 @@ export default class Texture {
     }
 
     /* void Texture::generate()
-     * From given image, creates a WebGLTexture if not created,
-     * and copies image data to GPU using texImage2D.
+     * Loads a new HTMLImageElement from given source,
+     * and copies image data to GPU using texImage2D when the image is loaded.
      * This method should not be used frequently;
      * for dynamically changing textures, look for FBOs instead. */
-    generate(image: ImageData): void {
+    generate(imageSource: string): void {
         /* Create a WebGLTexture if not created. */
-        if (this._texture)
+        if (!this._texture)
             this._texture = this._gl.createTexture();
         
         /* Bind the texture to WebGL context .*/
         this._gl.bindTexture(this._textureType, this._texture);
 
-        /* Copies the image data into GPU.
-         * The paramters should be adjusted by the format of image,
-         * but this is just fine for PNG images. */
-        this._gl.texImage2D(
-            this._textureType,      /* Texture type. */
-            0,                      /* Mipmap level. */
-            this._gl.RGBA,          /* Format of pixel data stored in GPU. */
-            this._gl.RGBA,          /* Format of pixel data of the given image. */
-            this._gl.UNSIGNED_BYTE, /* Type of the data of the given image. */
-            image                   /* Pixel data to transfer. */
-        );
+        /* Load temporary 1x1 data to texture. */
+        this._gl.texImage2D(this._textureType, 0, this._gl.RGBA, 
+            1, 1, 0, this._gl.RGBA, this._gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 255, 255]));
 
         /* Set the texture paramters to default values. */
         /* TEXTURE_MAG_FILTER; sampling algorithm for magnified textures on the scene. */
@@ -43,12 +35,38 @@ export default class Texture {
         this._gl.texParameteri(this._textureType, this._gl.TEXTURE_WRAP_S, this._gl.REPEAT);
         /* TEXTURE_WRAP_T; sampling algorithm for extrapolation on vertical axis. */
         this._gl.texParameteri(this._textureType, this._gl.TEXTURE_WRAP_T, this._gl.REPEAT);
-
-        /* Generate mipmap for this texture. */
-        this._gl.generateMipmap(this._textureType);
-
+        
         /* Unbind the texture from WebGL context. */
         this._gl.bindTexture(this._textureType, null);
+
+        /* Create a HTMLImageElement for loading texture image. */
+        const image = new Image();
+
+        /* Load actual image data to texture by callback. */
+        image.onload = () => {
+            /* Bind the texture to WebGL context .*/
+            this._gl.bindTexture(this._textureType, this._texture);
+
+            /* Copies the image data into GPU.
+            * The paramters should be adjusted by the format of image,
+            * but this is just fine for PNG images. */
+            this._gl.texImage2D(
+                this._textureType,      /* Texture type. */
+                0,                      /* Mipmap level. */
+                this._gl.RGBA,          /* Format of pixel data stored in GPU. */
+                this._gl.RGBA,          /* Format of pixel data of the given image. */
+                this._gl.UNSIGNED_BYTE, /* Type of the data of the given image. */
+                image                   /* Pixel data to transfer. */
+            );
+
+            /* Generate mipmap for this texture. */
+            this._gl.generateMipmap(this._textureType);
+
+            /* Unbind the texture from WebGL context. */
+            this._gl.bindTexture(this._textureType, null);
+        };
+
+        image.src = imageSource;
 
     }
 

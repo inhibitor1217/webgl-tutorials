@@ -117,7 +117,7 @@ export default class Mesh {
     /* void Mesh::stop()
      * This method is called after the application rendered this mesh.
      * Unbinds VAO and disable BOs attached to this mesh. */
-    stop(): void {
+    stop(): void {  
         /* Unbind VAO to WebGL Context. */
         this._gl.bindVertexArray(null);
 

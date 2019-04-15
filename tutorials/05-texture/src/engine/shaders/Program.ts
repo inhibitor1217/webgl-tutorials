@@ -89,6 +89,58 @@ export default class Program {
         this._gl.useProgram(null);
     }
 
+    /* void Program::setUniform[1234][fi][v](string, ...)
+     * This method references the location of uniform variable in shader program
+     * and modifies the variable to a given value. */
+    setUniform1f(name: string, v0: number): void {
+        this._gl.uniform1f(this._gl.getUniformLocation(this._program, name), v0); 
+    }
+    setUniform1fv(name: string, value: Float32Array): void {
+        this._gl.uniform1fv(this._gl.getUniformLocation(this._program, name), value);
+    }
+    setUniform1i(name: string, v0: number): void {
+        this._gl.uniform1i(this._gl.getUniformLocation(this._program, name), v0);
+    }
+    setUniform1iv(name: string, value: Int32Array): void {
+        this._gl.uniform1iv(this._gl.getUniformLocation(this._program, name), value);
+    }
+    setUniform2f(name: string, v0: number, v1: number): void {
+        this._gl.uniform2f(this._gl.getUniformLocation(this._program, name), v0, v1);
+    }
+    setUniform2fv(name: string, value: Float32Array): void {
+        this._gl.uniform2fv(this._gl.getUniformLocation(this._program, name), value);
+    }
+    setUniform2i(name: string, v0: number, v1: number): void {
+        this._gl.uniform2i(this._gl.getUniformLocation(this._program, name), v0, v1);
+    }
+    setUniform2iv(name: string, value: Int32Array): void {
+        this._gl.uniform2iv(this._gl.getUniformLocation(this._program, name), value);
+    }
+    setUniform3f(name: string, v0: number, v1: number, v2: number): void {
+        this._gl.uniform3f(this._gl.getUniformLocation(this._program, name), v0, v1, v2);
+    }
+    setUniform3fv(name: string, value: Float32Array): void {
+        this._gl.uniform3fv(this._gl.getUniformLocation(this._program, name), value);
+    }
+    setUniform3i(name: string, v0: number, v1: number, v2: number): void {
+        this._gl.uniform3i(this._gl.getUniformLocation(this._program, name), v0, v1, v2);
+    }
+    setUniform3iv(name: string, value: Int32Array): void {
+        this._gl.uniform3iv(this._gl.getUniformLocation(this._program, name), value);
+    }
+    setUniform4f(name: string, v0: number, v1: number, v2: number, v3: number): void {
+        this._gl.uniform4f(this._gl.getUniformLocation(this._program, name), v0, v1, v2, v3);
+    }
+    setUniform4fv(name: string, value: Float32Array): void {
+        this._gl.uniform4fv(this._gl.getUniformLocation(this._program, name), value);
+    }
+    setUniform4i(name: string, v0: number, v1: number, v2: number, v3: number): void {
+        this._gl.uniform4i(this._gl.getUniformLocation(this._program, name), v0, v1, v2, v3);
+    }
+    setUniform4iv(name: string, value: Int32Array): void {
+        this._gl.uniform4iv(this._gl.getUniformLocation(this._program, name), value);
+    }
+
     /* WebGLShader Program::_createShader(GLenum, string)
      * This private method compiles the shader source and returns it.
      * null is returned for failure. */
