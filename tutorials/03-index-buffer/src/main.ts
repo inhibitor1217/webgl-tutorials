@@ -12,9 +12,14 @@ if (gl) {
     /* Create mesh (a rectangle) using hard-coded data. */
     const mesh = new Mesh(gl);
     mesh.setAttributes([[gl.FLOAT, 2]]);
-    mesh.storeBufferFromFloat32Array(new Float32Array([
-        -0.5,  0.5, -0.5, -0.5,  0.5, -0.5,
-         0.5, -0.5,  0.5,  0.5, -0.5,  0.5
+    mesh.storeVertexBuffer(new Float32Array([
+        -0.5,  0.5,
+        -0.5, -0.5,
+         0.5,  0.5, 
+         0.5, -0.5
+    ]));
+    mesh.storeIndexBuffer(new Uint32Array([
+        0, 1, 3, 0, 3, 2
     ]));
     mesh.setNumVertices(6);
     mesh.generate();

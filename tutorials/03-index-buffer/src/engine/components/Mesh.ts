@@ -5,7 +5,9 @@ export default class Mesh {
     _gl: WebGL2RenderingContext;                      /* Reference to WebGL context. */
     _vao: WebGLVertexArrayObject;                     /* VAO of the mesh. */
     _vbo: WebGLBuffer;                                /* BO for storing vertex data. */
+    _ibo: WebGLBuffer;                                /* BO for storing index array. */
     _vertexBuffer: ArrayBuffer;                       /* Buffer storing the vertex data before BO creation. */
+    _indexBuffer: ArrayBuffer;                        /* Buffer storing the index array before BO creation. */
     _attributes: Array<[GLenum, number]>;             /* Object containing type and size of each attributes. */
     _numVertices: GLsizei;                            /* Number of vertices in this mesh. */
     _drawMode: GLenum;                                /* DrawMode that render refers when rendering this mesh. */
@@ -44,9 +46,15 @@ export default class Mesh {
             this._gl.vertexAttribPointer(Number(index), size, type, false, vertexBufferSize, vertexBufferOffset);
             vertexBufferOffset += 4 * size;
         }
-
-        /* Unbind VAO and BOs. */
         this._gl.bindBuffer(this._gl.ARRAY_BUFFER, null);
+
+        /* Generate Index Buffer Object if available. */
+        if (this._indexBuffer) {
+            this._ibo = this._gl.createBuffer();
+            this._gl.bindBuffer(this._gl.ELEMENT_ARRAY_BUFFER, this._ibo);
+            this._gl.bufferData(this._gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer, this._gl.STATIC_DRAW);
+        }
+
         this._gl.bindVertexArray(null);
     }
 
@@ -105,15 +113,25 @@ export default class Mesh {
     }
 
     /* void Mesh::render()
-     * Wraps the render call to this mesh. */
+     * Wraps the render call to this mesh.
+     * Use index buffer for rendering if available. */
     render(): void {
-        this._gl.drawArrays(this._drawMode, 0, this._numVertices);
+        if (this._ibo)
+            this._gl.drawElements(this._drawMode, this._numVertices, this._gl.UNSIGNED_INT, 0);
+        else
+            this._gl.drawArrays(this._drawMode, 0, this._numVertices);
     }
 
-    /* void Mesh::storeBufferFromFloatArray(Float32Array)
+    /* void Mesh::storeVertexBuffer(Float32Array)
      * This method sets the vertex buffer from given Float32Array. */
-    storeBufferFromFloat32Array(data: Float32Array): void {
+    storeVertexBuffer(data: Float32Array): void {
         this._vertexBuffer = data.buffer;
+    }
+    
+    /* void Mesh::storeVertexBuffer(Float32Array)
+     * This method sets the index buffer from given Uint32Array. */
+    storeIndexBuffer(data: Uint32Array): void {
+        this._indexBuffer = data.buffer;
     }
 
     setAttributes(attributes: Array<[GLenum, number]>) { this._attributes = attributes; }
