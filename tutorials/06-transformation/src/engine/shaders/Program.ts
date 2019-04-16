@@ -141,6 +141,19 @@ export default class Program {
         this._gl.uniform4iv(this._gl.getUniformLocation(this._program, name), value);
     }
 
+    /* void Program::setUniformMatrix[234]fv(string, boolean, Float32Array)
+     * This method references the location of uniform matrix variable in shader program
+     * and modifies the variable to given value. */
+    setUniformMatrix2fv(name: string, transpose: boolean, value: Float32Array): void {
+        this._gl.uniformMatrix2fv(this._gl.getUniformLocation(this._program, name), transpose, value);
+    }
+    setUniformMatrix3fv(name: string, transpose: boolean, value: Float32Array): void {
+        this._gl.uniformMatrix3fv(this._gl.getUniformLocation(this._program, name), transpose, value);
+    }
+    setUniformMatrix4fv(name: string, transpose: boolean, value: Float32Array): void {
+        this._gl.uniformMatrix4fv(this._gl.getUniformLocation(this._program, name), transpose, value);
+    }
+
     /* WebGLShader Program::_createShader(GLenum, string)
      * This private method compiles the shader source and returns it.
      * null is returned for failure. */

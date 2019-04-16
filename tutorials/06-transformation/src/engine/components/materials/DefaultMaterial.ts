@@ -1,9 +1,9 @@
 import Material from 'engine/components/materials/Material';
 import Program from 'engine/shaders/Program';
-import { vertexShader, fragmentShader } from 'engine/res/TextureMaterialShader';
+import { vertexShader, fragmentShader } from 'engine/res/DefaultMaterialShader';
 import Texture from 'engine/textures/Texture';
 
-export default class TextureMaterial extends Material {
+export default class DefaultMaterial extends Material {
 
     _texture: Texture;    /* Texture to be sampled from this material. */
     _textureUnit: GLenum; /* Texture unit to bind the texture. */
@@ -13,7 +13,7 @@ export default class TextureMaterial extends Material {
         this._textureUnit = gl.TEXTURE0;
     }
 
-    /* void TextureMaterial::start() override
+    /* void DefaultMaterial::start() override
      * Binds the texture to texture unit TEXTURE0
      * and set sampler in the shader program to the texture unit. */
     start(): void {
@@ -22,7 +22,7 @@ export default class TextureMaterial extends Material {
         this._program.setUniform1i('sampler', 0);
     }
 
-    /* void TextureMaterial::stop() override
+    /* void DefaultMaterial::stop() override
      * Unbinds the texture from texture unit TEXTURE0. */
     stop(): void {
         super.stop();

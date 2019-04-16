@@ -1,5 +1,6 @@
 import Mesh from 'engine/components/Mesh';
 import Material from 'engine/components/materials/Material';
+import Transform from 'engine/components/Transform';
 
 export default class SceneObject {
 
@@ -8,11 +9,13 @@ export default class SceneObject {
     /* Note that these components will be replaced to general components later. */
     _mesh: Mesh;                 /* Mesh to be rendered in this object. */
     _material: Material;         /* Material used to render in this object .*/
+    _transform: Transform;       /* Transform of this object. */
 
     constructor(gl: WebGL2RenderingContext, mesh: Mesh, material: Material) {
         this._gl = gl;
         this._mesh = mesh;
         this._material = material;
+        this._transform = new Transform(gl);
     }
 
     /* void SceneObject::render()
@@ -29,6 +32,8 @@ export default class SceneObject {
         /* Bind mesh and shaders to WebGL context. */
         this._mesh.start();
         this._material.start();
+        this._material.getProgram().setUniformMatrix4fv('transformation', false,
+            this._transform.getTransformationMatrix());
 
         /* Invoke the render call. */
         this._mesh.render();
@@ -37,5 +42,7 @@ export default class SceneObject {
         this._mesh.stop();
         this._material.stop();
     }
+
+    getTransform(): Transform { return this._transform; }
 
 }

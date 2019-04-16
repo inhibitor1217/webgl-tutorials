@@ -1,7 +1,8 @@
 import Mesh from 'engine/components/Mesh';
 import SceneObject from 'engine/objects/SceneObject';
-import TextureMaterial from 'engine/components/materials/TextureMaterial';
+import DefaultMaterial from 'engine/components/materials/DefaultMaterial';
 import Texture2D from 'engine/textures/Texture2D';
+import { vec3, glMatrix } from 'gl-matrix';
 
 const canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('canvas');
 const gl: WebGL2RenderingContext = canvas.getContext('webgl2');
@@ -10,12 +11,12 @@ if (gl) {
 
     /* Create meshes (a rectangle) using hard-coded data. */
     const mesh = new Mesh(gl);
-    mesh.setAttributes([[gl.FLOAT, 2], [gl.FLOAT, 2]]); // [position, uv]
+    mesh.setAttributes([[gl.FLOAT, 3], [gl.FLOAT, 2]]); // [position, uv]
     mesh.storeVertexBuffer(new Float32Array([
-        -0.5,  0.5, 0, 0,
-        -0.5, -0.5, 0, 1,
-         0.5,  0.5, 1, 0,
-         0.5, -0.5, 1, 1
+        -0.5,  0.5, 0, 0, 0,
+        -0.5, -0.5, 0, 0, 1,
+         0.5,  0.5, 0, 1, 0,
+         0.5, -0.5, 0, 1, 1
     ]));
     mesh.storeIndexBuffer(new Uint32Array([
         0, 1, 3, 0, 3, 2
@@ -28,7 +29,7 @@ if (gl) {
     texture.generate('res/textures/sample_texture.png');
 
     /* Create a TextureMaterial from the shader and texture. */
-    const material = new TextureMaterial(gl);
+    const material = new DefaultMaterial(gl);
     material.setTexture(texture);
 
     /* Define SceneObjects associated with the mesh and material. */
@@ -47,6 +48,12 @@ if (gl) {
 
         /* Invoke the render call. */
         object.render();
+
+        /* Adjust object transform. */
+        object.getTransform().setPosition(
+            vec3.fromValues(0.3 * Math.cos(0.0005 * time), 0.3 * Math.sin(0.0005 * time), 0)
+        );
+        object.getTransform().rotateY(glMatrix.toRadian(1));
 
         /* Request for next frame. */
         requestAnimationFrame(render);
