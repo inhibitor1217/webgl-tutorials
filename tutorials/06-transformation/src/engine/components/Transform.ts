@@ -2,15 +2,13 @@ import { vec3, quat, mat4 } from 'gl-matrix';
 
 export default class Transform {
 
-    _gl: WebGL2RenderingContext;
-    _position: vec3;
-    _rotation: quat;
-    _scale: vec3;
-    _localTransformationMatrix: mat4;
-    _updated: boolean;
+    _position: vec3;                  /* Current position. */
+    _rotation: quat;                  /* Current rotation, expressed by quaternion. */
+    _scale: vec3;                     /* Current scale. */
+    _localTransformationMatrix: mat4; /* Storage of transformation matrix, for efficiency. */
+    _updated: boolean;                /* Flag for updated position, rotation, or scale. */
 
-    constructor(gl: WebGL2RenderingContext) {
-        this._gl = gl;
+    constructor() {
         this._position = vec3.create();
         this._rotation = quat.create();
         this._scale = vec3.fromValues(1, 1, 1);
@@ -18,6 +16,10 @@ export default class Transform {
         this._updated = false;
     }
 
+    /* mat4 Transform::getTransformationMatrix()
+     * If necessary, computes the transformation matrix from
+     * position, rotation, and scale.
+     * Returns current transformation matrix. */
     getTransformationMatrix(): mat4 {
         if (!this._updated)
             return this._localTransformationMatrix;
@@ -46,16 +48,17 @@ export default class Transform {
         }
     }
 
+    /* void Transform::rotate[XYZ](number)
+     * Rotate the transform respect to (x, y, z)-axis
+     * by the given angle. */
     rotateX(angle: number): void {
         quat.rotateX(this._rotation, this._rotation, angle);
         this._updated = true;
     }
-
     rotateY(angle: number): void {
         quat.rotateY(this._rotation, this._rotation, angle);
         this._updated = true;
     }
-
     rotateZ(angle: number): void {
         quat.rotateZ(this._rotation, this._rotation, angle);
         this._updated = true;

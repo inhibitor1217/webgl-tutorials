@@ -15,7 +15,7 @@ export default class SceneObject {
         this._gl = gl;
         this._mesh = mesh;
         this._material = material;
-        this._transform = new Transform(gl);
+        this._transform = new Transform();
     }
 
     /* void SceneObject::render()
