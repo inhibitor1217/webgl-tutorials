@@ -1,7 +1,12 @@
+import global from 'global';
+
 const canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('canvas');
 const gl: WebGL2RenderingContext = canvas.getContext('webgl2');
 
 if (gl) {
+
+    /* Store WebGL Context to global storage. */
+    global.set('gl', gl);
 
     /* glViewPort(x, y, width, height)
      * Specifies the affine transform from normalized device coordinates
