@@ -1,16 +1,20 @@
-import Mesh from './engine/components/Mesh';
-import Program from './engine/shaders/Program';
-import Material from './engine/components/Material';
-import SceneObject from './engine/objects/SceneObject';
-import { vertexShader, fragmentShader } from './engine/res/DefaultMaterialShaders';
+import global from 'global';
+import Mesh from 'engine/components/Mesh';
+import Program from 'engine/shaders/Program';
+import Material from 'engine/components/Material';
+import SceneObject from 'engine/objects/SceneObject';
+import { vertexShader, fragmentShader } from 'engine/res/DefaultMaterialShaders';
 
 const canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('canvas');
 const gl: WebGL2RenderingContext = canvas.getContext('webgl2');
 
 if (gl) {
 
+    /* Store WebGL Context to global storage. */
+    global.set('gl', gl);
+    
     /* Create mesh (a rectangle) using hard-coded data. */
-    const mesh = new Mesh(gl);
+    const mesh = new Mesh();
     mesh.setAttributes([[gl.FLOAT, 2]]);
     mesh.storeBufferFromFloat32Array(new Float32Array([
         -0.5,  0.5, -0.5, -0.5,  0.5, -0.5,
@@ -20,12 +24,13 @@ if (gl) {
     mesh.generate();
 
     /* Create program and materials used to render the mesh. */
-    const program = new Program(gl, vertexShader, fragmentShader);
+    const program = new Program(vertexShader, fragmentShader);
     program.generate();
+
     const material = new Material(program);
 
     /* Define a SceneObject associated with the mesh and material. */
-    const object = new SceneObject(gl, mesh, material);
+    const object = new SceneObject(mesh, material);
 
     /* glViewPort(x, y, width, height)
      * Specifies the affine transform from normalized device coordinates

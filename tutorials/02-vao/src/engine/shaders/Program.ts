@@ -1,18 +1,16 @@
+import global from 'global';
 
 export default class Program {
 
-    _gl: WebGL2RenderingContext;   /* Reference to WebGL context. */
+    _gl: WebGL2RenderingContext    /* Reference to WebGL Context. */
     _program: WebGLProgram;        /* WebGL program layered by this class. */
     _vertexShader: WebGLShader;    /* Vertex shader of the program. */
     _fragmentShader: WebGLShader;  /* Fragment shader of the program. */
     _vertexShaderSource: string;   /* Source string of the vertex shader. */
     _fragmentShaderSource: string; /* Source string of the fragment shader. */
 
-    constructor(
-        gl: WebGL2RenderingContext, 
-        vertexShaderSource: string,
-        fragmentShaderSource: string) {
-        this._gl = gl;
+    constructor(vertexShaderSource: string, fragmentShaderSource: string) {
+        this._gl = global.get('gl');
         this._vertexShaderSource = vertexShaderSource;
         this._fragmentShaderSource = fragmentShaderSource;
     }
@@ -51,9 +49,6 @@ export default class Program {
      * longer needed in the application.
      * Deletes the shader and program attached to this object. */
     release(): void {
-        /* Stop the program in case it is in use. */
-        this.stop();
-
         /* Detach the shaders and delete the program. */
         if (this._program) {
             this._gl.detachShader(this._program, this._vertexShader);

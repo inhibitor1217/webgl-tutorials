@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = {
     mode: 'development',
     entry: './src/main.ts',
@@ -15,6 +17,10 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.ts']
+        extensions: ['.ts'],
+        modules: [
+            path.resolve('./src'),
+            './node_modules'
+        ]
     }
 }

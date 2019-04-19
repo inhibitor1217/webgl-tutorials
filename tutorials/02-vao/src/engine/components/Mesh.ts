@@ -1,4 +1,4 @@
-import { vertexShader } from "engine/res/DefaultMaterialShaders";
+import global from 'global';
 
 export default class Mesh {
 
@@ -10,8 +10,8 @@ export default class Mesh {
     _numVertices: GLsizei;                            /* Number of vertices in this mesh. */
     _drawMode: GLenum;                                /* DrawMode that render refers when rendering this mesh. */
 
-    constructor(gl: WebGL2RenderingContext) {
-        this._gl = gl;
+    constructor() {
+        this._gl = global.get('gl');
         this._attributes = [];
         this._numVertices = 0;
         this._drawMode = this._gl.TRIANGLES;
@@ -30,19 +30,26 @@ export default class Mesh {
         if (this._vertexBuffer == null)
             throw "Mesh::generate failed: vertexBuffer not set";
 
+        /* Generate VAO. */
+        if (!this._vao)
+            this._vao = this._gl.createVertexArray();
+        this._gl.bindVertexArray(this._vao);
+
         /* Generate Buffer Objects and copy vertexBuffer into GPU. */
-        this._vbo = this._gl.createBuffer();
+        if (!this._vbo)
+            this._vbo = this._gl.createBuffer();
         this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._vbo);
         this._gl.bufferData(this._gl.ARRAY_BUFFER, this._vertexBuffer, this._gl.STATIC_DRAW);
 
-        /* Generate VAO. */
-        this._vao = this._gl.createVertexArray();
-        this._gl.bindVertexArray(this._vao);
+        /* Attach VBO to VAO. */
         const vertexBufferSize = this._attributes.map(([type, size]) => 4 * size).reduce((s, x) => s + x);
         let vertexBufferOffset = 0;
         for (const [index, [type, size]] of Object.entries(this._attributes)) {
             this._gl.vertexAttribPointer(Number(index), size, type, false, vertexBufferSize, vertexBufferOffset);
             vertexBufferOffset += 4 * size;
+
+            /* Enable BOs attached to this VAO. */
+            this._gl.enableVertexAttribArray(Number(index));
         }
 
         /* Unbind VAO and BOs. */
@@ -59,9 +66,20 @@ export default class Mesh {
         if (this._vbo)
             this._gl.deleteBuffer(this._vbo);
         
-        /* Free the VAO. */
+        /* Free VAO. */
         if (this._vao) {
+            /* Disable BOs attached to this VAO. */
+            this._gl.bindVertexArray(this._vao);
+            Object.keys(this._attributes)
+                .map(x => Number(x))
+                .forEach(index => {
+                    this._gl.disableVertexAttribArray(index);
+                });
+            this._gl.bindVertexArray(null);
+
+            /* Delete VAO. */
             this._gl.deleteVertexArray(this._vao);
+            this._vao = null;
         }
     }
 
@@ -70,38 +88,22 @@ export default class Mesh {
      * when rendering this mesh.
      * Binds VAO and enable BOs attached to this mesh. */
     start(): void {
-        /* Validation. */
-        if (!this._vao)
-            throw "Mesh::start failed: VAO not generated";
-
         /* Bind VAO to WebGL context. */
         this._gl.bindVertexArray(this._vao);
 
-        /* Enable BOs attached to this VAO. */
-        Object.keys(this._attributes)
-            .map(x => Number(x))
-            .forEach(index => {
-                this._gl.enableVertexAttribArray(index);
-            });
+        /* Bind BOs to WebGL context .*/
+        this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._vbo);
     }
 
     /* void Mesh::stop()
      * This method is called after the application rendered this mesh.
      * Unbinds VAO and disable BOs attached to this mesh. */
     stop(): void {
-        /* Validation. */
-        if (!this._vao)
-            throw "Mesh::start failed: VAO not generated";
-
-        /* Disable BOs attached to this VAO. */
-        Object.keys(this._attributes)
-            .map(x => Number(x))
-            .forEach(index => {
-                this._gl.disableVertexAttribArray(index);
-            });
-
         /* Unbind VAO to WebGL Context. */
         this._gl.bindVertexArray(null);
+
+        /* Unbind BOs to WebGL context .*/
+        this._gl.bindBuffer(this._gl.ARRAY_BUFFER, null);
     }
 
     /* void Mesh::render()
