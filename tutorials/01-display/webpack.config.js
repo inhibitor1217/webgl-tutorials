@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = {
     mode: 'development',
     entry: './src/main.ts',
@@ -10,8 +12,15 @@ module.exports = {
             {
                 test: /\.ts?$/,
                 use: 'ts-loader',
-                exclude: '/node_modules/'
+                exclude: '/node_modules'
             }
+        ]
+    },
+    resolve: {
+        extensions: ['.ts'],
+        modules: [
+            path.resolve('./src'),
+            './node_modules'
         ]
     }
 }

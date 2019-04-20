@@ -58,7 +58,6 @@ export default class Mesh {
     start(): void {
         if (this._deleted)
             return;
-        this._gl.bindBuffer(this._gl.ARRAY_BUFFER, this._vbo);
         this._gl.bindVertexArray(this._vao);
     }
 
@@ -71,7 +70,6 @@ export default class Mesh {
     stop(): void {
         if (this._deleted)
             return;
-        this._gl.bindBuffer(this._gl.ARRAY_BUFFER, null);
         this._gl.bindVertexArray(null);
     }
 

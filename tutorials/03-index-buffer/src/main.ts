@@ -1,36 +1,54 @@
-import Mesh from './engine/components/Mesh';
-import Program from './engine/shaders/Program';
-import Material from './engine/components/Material';
-import SceneObject from './engine/objects/SceneObject';
-import { vertexShader, fragmentShader } from './engine/res/DefaultMaterialShaders';
+import global from 'global';
+import Mesh from 'engine/components/Mesh';
 
 const canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('canvas');
 const gl: WebGL2RenderingContext = canvas.getContext('webgl2');
 
 if (gl) {
 
+    /* Store WebGL Context to global storage. */
+    global.set('gl', gl);
+    
     /* Create mesh (a rectangle) using hard-coded data. */
-    const mesh = new Mesh(gl);
-    mesh.setAttributes([[gl.FLOAT, 2]]);
-    mesh.storeVertexBuffer(new Float32Array([
-        -0.5,  0.5,
-        -0.5, -0.5,
-         0.5,  0.5, 
-         0.5, -0.5
+    const mesh = new Mesh();
+    mesh.updateVertexBuffer(new Float32Array([
+        -0.5,  0.5, -0.5, -0.5,  0.5, 0.5, 0.5, -0.5
     ]));
-    mesh.storeIndexBuffer(new Uint32Array([
+    mesh.updateIndexBuffer(new Uint32Array([
         0, 1, 3, 0, 3, 2
     ]));
-    mesh.setNumVertices(6);
-    mesh.generate();
+    mesh.configure([[gl.FLOAT, 2]]);
+    mesh.setCount(6);
 
-    /* Create program and materials used to render the mesh. */
-    const program = new Program(gl, vertexShader, fragmentShader);
-    program.generate();
-    const material = new Material(program);
+    const vertexShaderSource = 
+    `#version 300 es
+    layout(location = 0) in vec2 position;
+    void main() {
+        gl_Position = vec4(position, 0, 1);
+    }
+    `
+    const fragmentShaderSource = 
+    `#version 300 es
+    precision mediump float;
+    out vec4 out_color;
+    void main() {
+        out_color = vec4(1, 1, 1, 1);
+    }
+    `
+    const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vertexShader, vertexShaderSource);
+    gl.compileShader(vertexShader);
 
-    /* Define a SceneObject associated with the mesh and material. */
-    const object = new SceneObject(gl, mesh, material);
+    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fragmentShader, fragmentShaderSource);
+    gl.compileShader(fragmentShader);
+
+    const program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+
+    gl.useProgram(program);
 
     /* glViewPort(x, y, width, height)
      * Specifies the affine transform from normalized device coordinates
@@ -42,7 +60,11 @@ if (gl) {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     /* Invoke the render call. */
-    object.render();
+    mesh.start();
+    mesh.render();
+    mesh.stop();
+
+    mesh.delete();
 
 } else {
     console.log('WebGL not supported in this browser.');
