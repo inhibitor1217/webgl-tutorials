@@ -46,14 +46,6 @@ export default class Texture2D {
         }
     }
 
-    setTextureParameter(param: GLenum, value: GLenum): void {
-        if (!this._deleted) {
-            this._gl.bindTexture(this._gl.TEXTURE_2D, this._texture);
-            this._gl.texParameteri(this._gl.TEXTURE_2D, param, value);
-            this._gl.bindTexture(this._gl.TEXTURE_2D, null);
-        }
-    }
-
     delete(): void {
         if (!this._deleted) {
             this._gl.deleteTexture(this._texture);

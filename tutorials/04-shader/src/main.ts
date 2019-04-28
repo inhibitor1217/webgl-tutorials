@@ -23,7 +23,8 @@ if (gl) {
     mesh.setCount(6);
 
     const defaultShader = new DefaultShader();
-    const material = new Material(defaultShader);
+    const material = new Material();
+    material.setColor(1, 0, 0);
 
     /* glViewPort(x, y, width, height)
      * Specifies the affine transform from normalized device coordinates
@@ -36,13 +37,12 @@ if (gl) {
 
     /* Invoke the render call. */
     mesh.start();
-    material.start();
-    material.setColor(1, 0, 0);
+    material.start(defaultShader);
 
     mesh.render();
 
     mesh.stop();
-    material.stop();
+    material.stop(defaultShader);
 
     mesh.delete();
 

@@ -27,8 +27,8 @@ if (gl) {
     mesh.setCount(6);
 
     const defaultShader = new DefaultShader();
-    const material = new Material(defaultShader);
 
+    const material = new Material();
     const texture = new Texture2D();
     texture.loadFromImage('res/textures/sample_texture.png');
     material.setTexture(texture);
@@ -45,12 +45,12 @@ if (gl) {
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         mesh.start();
-        material.start();
+        material.start(defaultShader);
 
         mesh.render();
 
         mesh.stop();
-        material.stop();
+        material.stop(defaultShader);
 
         requestAnimationFrame(mainLoop);
 
