@@ -3,6 +3,9 @@ import Mesh from 'engine/components/Mesh';
 import DefaultShader from 'engine/shaders/DefaultShader';
 import Material from 'engine/components/Material';
 import Texture2D from 'engine/textures/Texture2D';
+import Transform from 'engine/components/Transform';
+
+import { vec3, quat } from 'gl-matrix';
 
 const canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('canvas');
 const gl: WebGL2RenderingContext = canvas.getContext('webgl2');
@@ -27,10 +30,12 @@ if (gl) {
     mesh.setCount(6);
 
     const defaultShader = new DefaultShader();
-    
+
     const material = new Material();
     const texture = new Texture2D();
     material.setTexture(texture);
+
+    const transform = new Transform();
 
     /* glViewPort(x, y, width, height)
      * Specifies the affine transform from normalized device coordinates
@@ -43,8 +48,19 @@ if (gl) {
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
+        /* Handle animation. */
+        transform.setPosition(
+            vec3.fromValues(
+                0.3 * Math.cos(2 * Math.PI * time / 5000), 
+                0.3 * Math.sin(2 * Math.PI * time / 5000),
+                0
+            )
+        );
+
+        /* Rendering. */
         mesh.start();
         material.start(defaultShader);
+        defaultShader.setUniformMatrix4fv('transformation', transform.getLocalTransform());
 
         mesh.render();
 

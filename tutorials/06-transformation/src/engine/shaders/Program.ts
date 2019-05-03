@@ -100,6 +100,11 @@ export default class Program {
             this._gl.useProgram(this._program);
         this._gl.uniform1i(this._getUniformLocation(variableName), v0);
     }
+    setUniformMatrix4fv(variableName: string, value: Float32Array) {
+        if (!this._active)
+            this._gl.useProgram(this._program);
+        this._gl.uniformMatrix4fv(this._getUniformLocation(variableName), false, value);
+    }
 
     _getUniformLocation(variableName: string): WebGLUniformLocation {
         if (!this._active)
