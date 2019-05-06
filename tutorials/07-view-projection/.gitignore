@@ -1,0 +1,4 @@
+node_modules/
+dist/
+res/
+!src/engine/res/
