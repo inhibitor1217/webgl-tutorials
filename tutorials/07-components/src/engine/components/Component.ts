@@ -9,6 +9,7 @@ export default abstract class Component {
     getGameObject(): GameObject { return this._gameObject; }
 
     abstract start(): void
+    abstract update(deltaTime: number): void
     abstract stop(): void
 
 }

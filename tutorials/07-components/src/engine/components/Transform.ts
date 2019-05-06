@@ -18,6 +18,10 @@ export default class Transform extends Component {
         this._updated = false;
     }
 
+    start(): void { }
+    update(deltaTime: number): void { }
+    stop(): void { }
+
     getLocalTransform(): mat4 {
         if (this._updated) {
             mat4.fromRotationTranslationScale(
@@ -34,6 +38,12 @@ export default class Transform extends Component {
             vec3.copy(this._position, position);
             this._updated = true;
         }    
+    }
+    translate(deltaPosition: vec3): void {
+        if (!vec3.equals(vec3.create(), deltaPosition)) {
+            vec3.add(this._position, this._position, deltaPosition);
+            this._updated = true;
+        }
     }
 
     getRotation(): quat { return quat.copy(quat.create(), this._rotation); }

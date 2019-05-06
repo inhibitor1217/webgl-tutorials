@@ -75,6 +75,8 @@ export default class Mesh extends Component {
         this._gl.bindVertexArray(this._vao);
     }
 
+    update(deltaTime: number): void { }
+
     render(): void {
         if (this._deleted)
             return;

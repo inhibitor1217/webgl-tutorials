@@ -16,7 +16,6 @@ export default class Material extends Component {
 
     start(): void {
         const program = ShaderMaster.get(this.getGameObject().getShader());
-        program.start();
         program.setUniform1f('use_texture', this._texture2D ? 1 : 0);
         if (this._texture2D) {
             this._texture2D.bind(this._gl.TEXTURE0);
@@ -26,9 +25,9 @@ export default class Material extends Component {
         }
     }
 
+    update(deltatTime: number) : void { }
+
     stop(): void {
-        const program = ShaderMaster.get(this.getGameObject().getShader());
-        program.stop();
         if (this._texture2D) {
             this._texture2D.unbind(this._gl.TEXTURE0);
         }
