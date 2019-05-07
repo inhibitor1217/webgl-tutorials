@@ -28,7 +28,7 @@ export default class Camera {
             mat4.perspective(this._projection, this._fov, this._aspectRatio, this._near, this._far);
             this._updated = false;
         }
-        return mat4.copy(mat4.create(), this._projection);
+        return this._projection;
     }
 
     getNear(): number { return this._near; }

@@ -1,5 +1,5 @@
 import global from 'global';
-import { vec3 } from 'gl-matrix';
+import { vec3, mat4 } from 'gl-matrix';
 
 import DefaultShader from 'engine/shaders/DefaultShader';
 import Material from 'engine/components/Material';
@@ -45,10 +45,6 @@ if (gl) {
 
     const mainLoop = (time: number) => {
 
-        /* Initialize frame buffer with color (0, 0, 0, 1). */
-        gl.clearColor(0, 0, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-
         /* Handle animation. */
         const deltaTime = time - prevTime;
         prevTime = time;
@@ -56,11 +52,18 @@ if (gl) {
         transform.rotateEulerY(0.001 * deltaTime);
         transform.rotateEulerZ(0.001 * deltaTime);
 
+        camera.setFOV(0.5 * Math.PI + 0.25 * Math.PI * Math.sin(0.0005 * time));
+
+        /* Initialize frame buffer with color (0, 0, 0, 1). */
+        gl.clearColor(0, 0, 0, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
         /* Rendering. */
         mesh.start();
         material.start(defaultShader);
         defaultShader.setUniformMatrix4fv('transformation', transform.getLocalTransform());
-        defaultShader.setUniformMatrix4fv('cameraTransformation', cameraTransform.getLocalTransform());
+        defaultShader.setUniformMatrix4fv('inverseCameraTransformation', 
+            mat4.invert(mat4.create(), cameraTransform.getLocalTransform()));
         defaultShader.setUniformMatrix4fv('projection', camera.getProjection());
 
         mesh.render();
