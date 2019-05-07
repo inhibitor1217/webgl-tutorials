@@ -7,11 +7,13 @@ layout(location = 0) in vec3 position;
 layout(location = 1) in vec2 uv;
 
 uniform mat4 transformation;
+uniform mat4 cameraTransformation;
+uniform mat4 projection;
 
 out vec2 pass_uv;
 
 void main() {
-    gl_Position = transformation * vec4(position, 1);
+    gl_Position = projection * inverse(cameraTransformation) * transformation * vec4(position, 1);
     pass_uv = uv;
 }
 `

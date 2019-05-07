@@ -1,12 +1,13 @@
 import global from 'global';
+import { vec3 } from 'gl-matrix';
+
 import DefaultShader from 'engine/shaders/DefaultShader';
 import Material from 'engine/components/Material';
-import Texture2D from 'engine/textures/Texture2D';
 import Transform from 'engine/components/Transform';
+import Camera from 'engine/components/Camera';
+import Texture2D from 'engine/textures/Texture2D';
 
 import PrimitiveMesh from 'engine/mixins/PrimitiveMesh';
-
-import { vec3 } from 'gl-matrix';
 
 const canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('canvas');
 const gl: WebGL2RenderingContext = canvas.getContext('webgl2');
@@ -17,7 +18,7 @@ if (gl) {
     global.set('gl', gl);
     
     /* Create a quad mesh from primitives. */
-    const mesh = PrimitiveMesh.get('quad');
+    const mesh = PrimitiveMesh.get('cube');
 
     const defaultShader = new DefaultShader();
 
@@ -27,10 +28,20 @@ if (gl) {
 
     const transform = new Transform();
 
+    /* Create a camera with a transform. */
+    const camera = new Camera();
+    const cameraTransform = new Transform();
+    cameraTransform.setPosition(vec3.fromValues(0, 0, 3));
+
     /* glViewPort(x, y, width, height)
      * Specifies the affine transform from normalized device coordinates
      * to window coordinates. */
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
+
+    let prevTime = 0;
 
     const mainLoop = (time: number) => {
 
@@ -39,18 +50,18 @@ if (gl) {
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         /* Handle animation. */
-        transform.setPosition(
-            vec3.fromValues(
-                0.3 * Math.cos(2 * Math.PI * time / 5000), 
-                0.3 * Math.sin(2 * Math.PI * time / 5000),
-                0
-            )
-        );
+        const deltaTime = time - prevTime;
+        prevTime = time;
+        transform.rotateEulerX(0.001 * deltaTime);
+        transform.rotateEulerY(0.001 * deltaTime);
+        transform.rotateEulerZ(0.001 * deltaTime);
 
         /* Rendering. */
         mesh.start();
         material.start(defaultShader);
         defaultShader.setUniformMatrix4fv('transformation', transform.getLocalTransform());
+        defaultShader.setUniformMatrix4fv('cameraTransformation', cameraTransform.getLocalTransform());
+        defaultShader.setUniformMatrix4fv('projection', camera.getProjection());
 
         mesh.render();
 

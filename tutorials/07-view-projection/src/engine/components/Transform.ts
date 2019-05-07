@@ -23,7 +23,7 @@ export default class Transform {
             );
             this._updated = false;
         }
-        return this._localTransformation;
+        return mat4.copy(mat4.create(), this._localTransformation);
     }
 
     getPosition(): vec3 { return vec3.copy(vec3.create(), this._position); }

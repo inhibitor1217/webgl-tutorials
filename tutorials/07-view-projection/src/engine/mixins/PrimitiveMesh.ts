@@ -52,15 +52,15 @@ export default (() => {
              0.5,  0.5,  0.5,   0, 1,
         ]));
         mesh.updateIndexBuffer(new Uint32Array([
-            0,  3,  1, 0, 2,  3,
-            0,  1,  5, 0, 5,  4,
-            4,  5,  7, 4, 7,  6,
-            2,  6,  7, 2, 7,  3,
-            0,  9,  2, 0, 8,  9,
-            1, 11, 10, 1, 3, 11,
+            0,  3,  1,  0,  2,  3,
+            0,  1,  5,  0,  5,  4,
+            4,  5,  7,  4,  7,  6,
+            2,  6,  7,  2,  7,  3,
+            0,  9,  2,  0,  8,  9,
+            1, 11, 10,  1,  3, 11,
         ]));
         mesh.configure([[gl.FLOAT, 3], [gl.FLOAT, 2]]);
-        mesh.setCount(24);
+        mesh.setCount(36);
         return mesh;
     }
 
