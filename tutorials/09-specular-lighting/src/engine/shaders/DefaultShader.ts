@@ -44,11 +44,15 @@ const float diffuse_intensity = 1.0;
 const vec3 specular_color = vec3(1, 1, 1);
 const float specular_intensity = 1.0;
 
+const float ambient_intensity = 1.0;
+
 const vec3  light_direction = vec3(0, 0, 1);
 const float light_intensity = 1.0;
 const vec3  light_color = vec3(1, 1, 1);
 
 const float specular_exponent = 50.0;
+const float ambient_light_intensity = 0.20;
+const vec3  ambient_light_color = vec3(1, 1, 1);
 
 out vec4 out_color;
 
@@ -66,7 +70,8 @@ void main() {
     
     out_color = vec4(
           diffuse_factor  * light_intensity * diffuse_intensity  * ( _diffuse_color * light_color )
-        + specular_factor * light_intensity * specular_intensity * ( specular_color * light_color ), 
+        + specular_factor * light_intensity * specular_intensity * ( specular_color * light_color )
+        + ambient_light_intensity * ambient_intensity * ( _diffuse_color * ambient_light_color ),
         1.0
     );
 
