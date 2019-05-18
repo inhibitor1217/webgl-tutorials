@@ -76,39 +76,32 @@ export default class Program {
     getProgram(): WebGLProgram { return this._program; }
 
     setUniform1f(variableName: string, v0: number): void {
-        if (!this._active)
-            this._gl.useProgram(this._program);
+        if (!this._active) { this._gl.useProgram(this._program); this._active = true; }
         this._gl.uniform1f(this._getUniformLocation(variableName), v0);
     }
     setUniform2f(variableName: string, v0: number, v1: number): void {
-        if (!this._active)
-            this._gl.useProgram(this._program);
+        if (!this._active) { this._gl.useProgram(this._program); this._active = true; }
         this._gl.uniform2f(this._getUniformLocation(variableName), v0, v1);
     }
     setUniform3f(variableName: string, v0: number, v1: number, v2: number): void {
-        if (!this._active)
-            this._gl.useProgram(this._program);
+        if (!this._active) { this._gl.useProgram(this._program); this._active = true; }
         this._gl.uniform3f(this._getUniformLocation(variableName), v0, v1, v2);
     }
     setUniform4f(variableName: string, v0: number, v1: number, v2: number, v3: number): void {
-        if (!this._active)
-            this._gl.useProgram(this._program);
+        if (!this._active) { this._gl.useProgram(this._program); this._active = true; }
         this._gl.uniform4f(this._getUniformLocation(variableName), v0, v1, v2, v3);
     }
     setUniform1i(variableName: string, v0: number): void {
-        if (!this._active)
-            this._gl.useProgram(this._program);
+        if (!this._active) { this._gl.useProgram(this._program); this._active = true; }
         this._gl.uniform1i(this._getUniformLocation(variableName), v0);
     }
     setUniformMatrix4fv(variableName: string, value: Float32Array) {
-        if (!this._active)
-            this._gl.useProgram(this._program);
+        if (!this._active) { this._gl.useProgram(this._program); this._active = true; }
         this._gl.uniformMatrix4fv(this._getUniformLocation(variableName), false, value);
     }
 
     _getUniformLocation(variableName: string): WebGLUniformLocation {
-        if (!this._active)
-            this._gl.useProgram(this._program);
+        if (!this._active) { this._gl.useProgram(this._program); this._active = true; }
         if (!this._uniformLocations[variableName])
             this._uniformLocations[variableName] = this._gl.getUniformLocation(this._program, variableName);
         return this._uniformLocations[variableName]; 

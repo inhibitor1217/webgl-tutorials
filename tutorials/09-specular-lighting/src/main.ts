@@ -5,7 +5,6 @@ import DefaultShader from 'engine/shaders/DefaultShader';
 import Material from 'engine/components/Material';
 import Transform from 'engine/components/Transform';
 import Camera from 'engine/components/Camera';
-import Texture2D from 'engine/textures/Texture2D';
 
 import PrimitiveMesh from 'engine/mixins/PrimitiveMesh';
 
@@ -23,8 +22,6 @@ if (gl) {
     const defaultShader = new DefaultShader();
 
     const material = new Material();
-    const texture = new Texture2D();
-    material.setTexture(texture);
 
     const transform = new Transform();
 
@@ -52,6 +49,12 @@ if (gl) {
         transform.rotateEulerY(0.0003 * deltaTime);
         transform.rotateEulerZ(0.0003 * deltaTime);
         
+        material.diffuse.diffuseColor = {
+            r: 0.5 * Math.sin(0.0005 * time) + 0.5,
+            g: 0.5 * Math.sin(0.0003 * time) + 0.5,
+            b: 0.5 * Math.sin(0.0001 * time) + 0.5
+        };
+
         /* Initialize frame buffer with color (0, 0, 0, 1). */
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);

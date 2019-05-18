@@ -38,19 +38,17 @@ in vec3 world_viewpoint;
 uniform float use_texture;
 uniform sampler2D sampler;
 
-uniform vec3 diffuse_color;
-const float diffuse_intensity = 1.0;
-
-const vec3 specular_color = vec3(1, 1, 1);
-const float specular_intensity = 1.0;
-
-const float ambient_intensity = 1.0;
+uniform vec3  diffuse_color;
+uniform float diffuse_intensity;
+uniform vec3  specular_color;
+uniform float specular_exponent;
+uniform float specular_intensity;
+uniform float ambient_intensity;
 
 const vec3  light_direction = vec3(0, 0, 1);
 const float light_intensity = 1.0;
 const vec3  light_color = vec3(1, 1, 1);
 
-const float specular_exponent = 50.0;
 const float ambient_light_intensity = 0.20;
 const vec3  ambient_light_color = vec3(1, 1, 1);
 
