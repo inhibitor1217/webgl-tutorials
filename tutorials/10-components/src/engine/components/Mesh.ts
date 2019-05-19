@@ -3,23 +3,23 @@ import Component from 'engine/components/Component';
 
 export default class Mesh extends Component {
 
+    _isMesh: boolean = true;
+
     _gl: WebGL2RenderingContext;
     _vao: WebGLVertexArrayObject;
     _vbo: WebGLBuffer;
     _ibo: WebGLBuffer;
     _count: GLsizei;
     _drawMode: GLenum;
-    _deleted: boolean;
 
     constructor() {
-        super();
+        super('mesh');
         this._gl = global.get('gl');
         this._vao = this._gl.createVertexArray();
         this._vbo = this._gl.createBuffer();
         this._ibo = this._gl.createBuffer();
         this._count = 0;
         this._drawMode = this._gl.TRIANGLES;
-        this._deleted = false;
     }
 
     updateVertexBuffer(buffer: ArrayBuffer): void {
@@ -69,33 +69,22 @@ export default class Mesh extends Component {
         this._gl.bindVertexArray(null);
     }
 
-    start(): void {
-        if (this._deleted)
-            return;
+    bind(): void {
         this._gl.bindVertexArray(this._vao);
     }
 
-    update(deltaTime: number): void { }
-
-    render(): void {
-        if (this._deleted)
-            return;
+    draw(): void {
         this._gl.drawElements(this._gl.TRIANGLES, this._count, this._gl.UNSIGNED_INT, 0);
     }
 
-    stop(): void {
-        if (this._deleted)
-            return;
+    unbind(): void {
         this._gl.bindVertexArray(null);
     }
 
     delete(): void {
-        if (this._deleted)
-            return;
         this._gl.deleteBuffer(this._vbo);
         this._gl.deleteBuffer(this._ibo);
         this._gl.deleteVertexArray(this._vao);
-        this._deleted = true;
     }
 
     getDrawMode(): GLenum { return this._drawMode; }

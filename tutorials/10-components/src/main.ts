@@ -1,6 +1,5 @@
 import global from 'global';
 import ShaderMaster from 'engine/shaders/ShaderMaster';
-import Quad from 'Quad';
 
 const canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('canvas');
 const gl: WebGL2RenderingContext = canvas.getContext('webgl2');
@@ -9,36 +8,34 @@ if (gl) {
 
     /* Store WebGL Context to global storage. */
     global.set('gl', gl);
-
+    
     ShaderMaster.init();
+    
+    /* Load scene. */
 
-    const quad = new Quad();
-
-    /* glViewPort(x, y, width, height)
-     * Specifies the affine transform from normalized device coordinates
-     * to window coordinates. */
+    /* Setup viewport. */
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    let prev_time = 0;
+    /* Initial configuration. */
+    gl.clearColor(0, 0, 0, 1);
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
+
+    let prevTime = 0;
+
     const mainLoop = (time: number) => {
 
-        /* Initialize frame buffer with color (0, 0, 0, 1). */
-        gl.clearColor(0, 0, 0, 1);
+        /* Animate objects in the scene. */
+        const deltaTime = time - prevTime;
+        prevTime = time;
+
+        
+
+        /* Clear the frame buffer. */
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        /* Start components. */
-        quad.start();
-
-        /* Handle animation. */
-        const deltaTime = time - prev_time;
-        prev_time = time;
-        quad.update(deltaTime);
-
-        /* Rendering. */
-        quad.render();
-
-        /* Stop components. */
-        quad.stop();
+        /* Render Pass. */
+        
 
         requestAnimationFrame(mainLoop);
 

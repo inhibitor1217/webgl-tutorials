@@ -6,9 +6,6 @@
       "target": "es5",
       "lib": ["esnext", "dom"],
       "allowJs": true,
-      "baseUrl": "./src",
-      "paths": {
-        "*": [ "./src/" ]
-      }
+      "baseUrl": "./src"
     }
   }

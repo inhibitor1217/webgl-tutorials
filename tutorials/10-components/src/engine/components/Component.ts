@@ -1,15 +1,32 @@
-import GameObject from "engine/objects/GameObject";
+import GameObject from 'engine/objects/GameObject';
 
-export default abstract class Component {
+export default class Component {
 
-    _gameObject: GameObject = null;
+    _isComponent        : boolean    = true;
+    _componentName      : string     = '';
+    _requiredComponents : Array<string> = [];
 
-    constructor() { }
+    _loaded     : boolean = false;
+    _active     : boolean = false;
+    _deleted    : boolean = false; 
+    _gameObject : GameObject = null;
+
+    constructor(componentName: string) {
+        this._componentName = componentName;
+    }
+
+    init(): void { }
+    start(): void { }
+    update(deltaTime: number): void { }
+    stop(): void { }
+    delete(): void { this._deleted = true; }
+
+    onEnable(): void { }
+    onDisable(): void { }
+
+    enable(): void  { this.onEnable();  this._active = true;  }
+    disable(): void { this.onDisable(); this._active = false; }
 
     getGameObject(): GameObject { return this._gameObject; }
-
-    abstract start(): void
-    abstract update(deltaTime: number): void
-    abstract stop(): void
 
 }

@@ -1,49 +1,32 @@
-import Component from "engine/components/Component";
-import Mesh from 'engine/components/Mesh';
-import Material from 'engine/components/Material';
-import Transform from "engine/components/Transform";
-import ShaderMaster from "engine/shaders/ShaderMaster";
+import Component from 'engine/components/Component';
 
 export default class GameObject {
 
-    _components: Array<Component> = [];
+    _active     : boolean = false;
+    _deleted    : boolean = false;
+    _components : Array<Component> = [];
 
-    _shader: string = 'DefaultShader';
-
-    constructor() {
-        
-    }
+    constructor() { }
 
     start(): void {
-        this._components.forEach(component => component.start());
+        this._components.forEach(component => {
+            if (!component._deleted && component._active)
+                component.start();
+        });
     }
 
     update(deltaTime: number): void {
-        this._components.forEach(component => component.update(deltaTime));
-    }
-
-    render(): void {
-        const program = ShaderMaster.get(this._shader);
-        const mesh = this.getComponent('Mesh') as Mesh;
-        const material = this.getComponent('Material') as Material;
-        const transform = this.getComponent('Transform') as Transform;
-
-        if (mesh && material && transform) {
-            program.start();
-            mesh.start();
-            material.start();
-
-            program.setUniformMatrix4fv('transformation', transform.getLocalTransform());
-            mesh.render();
-
-            program.stop();
-            mesh.stop();
-            material.stop();
-        }
+        this._components.forEach(component => {
+            if (!component._deleted && component._active)
+                component.update(deltaTime);
+        });
     }
 
     stop(): void {
-        this._components.forEach(component => component.stop());
+        this._components.forEach(component => {
+            if (!component._deleted && component._active)
+                component.stop();
+        });
     }
 
     addComponent(component: Component): void {
@@ -54,8 +37,6 @@ export default class GameObject {
     }
 
     removeComponent(component: Component): void {
-        if (component.getGameObject() != this)
-            return;
         const idx = this._components.indexOf(component);
         if (idx >= 0) {
             this._components.splice(idx, 1);
@@ -68,15 +49,12 @@ export default class GameObject {
     }
 
     getComponent(componentName: string): Component {
-        return this._components.find(component => component.constructor.name == componentName);
+        return this._components.find(component => component._componentName == componentName);
 
     }
 
     getComponents(componentName: string): Array<Component> {
-        return this._components.filter(component => component.constructor.name == componentName);
+        return this._components.filter(component => component._componentName == componentName);
     }
-
-    setShader(shaderName: string): void { this._shader = shaderName; }
-    getShader(): string { return this._shader; }
 
 }
