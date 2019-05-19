@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist/",
+      "noImplicitAny": true,
+      "module": "esnext",
+      "target": "es5",
+      "lib": ["esnext", "dom"],
+      "allowJs": true,
+      "baseUrl": "./src",
+      "paths": {
+        "*": [ "./src/" ]
+      }
+    }
+  }
