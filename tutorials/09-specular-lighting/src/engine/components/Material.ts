@@ -1,6 +1,7 @@
 import global from 'global';
 import Program from 'engine/shaders/Program';
 import Texture2D from 'engine/textures/Texture2D';
+import Color from 'engine/utils/Color';
 
 export default class Material {
     
@@ -8,16 +9,16 @@ export default class Material {
     _texture2D: Texture2D;
 
     diffuse: {
-        diffuseColor: { r: number, g: number, b: number },
-        diffuseIntensity: number
+        color: Color,
+        intensity: number
     };
     specular: {
-        specularColor: { r: number, g: number, b: number },
-        specularIntensity: number,
-        specularExponent: number
+        color: Color,
+        intensity: number,
+        exponent: number
     };
     ambient: {
-        ambientIntensity: number
+        intensity: number
     };
 
     constructor() {
@@ -25,16 +26,16 @@ export default class Material {
 
         /* Initialize material attributes. */
         this.diffuse = {
-            diffuseColor: { r: 1.0, g: 1.0, b: 1.0 },
-            diffuseIntensity: 1.0
+            color: new Color(0xFFFFFF),
+            intensity: 1.0
         };
         this.specular = {
-            specularColor: { r: 1.0, g: 1.0, b: 1.0 },
-            specularIntensity: 1.0,
-            specularExponent: 50.0
+            color: new Color(0xFFFFFF),
+            intensity: 1.0,
+            exponent: 50.0
         };
         this.ambient = {
-            ambientIntensity: 1.0
+            intensity: 1.0
         };
     }
 
@@ -45,13 +46,13 @@ export default class Material {
             this._texture2D.bind(this._gl.TEXTURE0);
             program.setUniform1i('sampler', 0);
         } else {
-            program.setUniform3f('diffuse_color', this.diffuse.diffuseColor.r, this.diffuse.diffuseColor.g, this.diffuse.diffuseColor.b);
+            program.setUniform3f('diffuse_color', this.diffuse.color.r, this.diffuse.color.g, this.diffuse.color.b);
         }
-        program.setUniform1f('diffuse_intensity',  this.diffuse.diffuseIntensity);
-        program.setUniform3f('specular_color',     this.specular.specularColor.r, this.specular.specularColor.g, this.specular.specularColor.b);
-        program.setUniform1f('specular_intensity', this.specular.specularIntensity);
-        program.setUniform1f('specular_exponent',  this.specular.specularExponent);
-        program.setUniform1f('ambient_intensity',  this.ambient.ambientIntensity);
+        program.setUniform1f('diffuse_intensity',  this.diffuse.intensity);
+        program.setUniform3f('specular_color',     this.specular.color.r, this.specular.color.g, this.specular.color.b);
+        program.setUniform1f('specular_intensity', this.specular.intensity);
+        program.setUniform1f('specular_exponent',  this.specular.exponent);
+        program.setUniform1f('ambient_intensity',  this.ambient.intensity);
     }
 
     stop(program: Program): void {

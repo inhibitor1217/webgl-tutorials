@@ -49,11 +49,11 @@ if (gl) {
         transform.rotateEulerY(0.0003 * deltaTime);
         transform.rotateEulerZ(0.0003 * deltaTime);
         
-        material.diffuse.diffuseColor = {
-            r: 0.5 * Math.sin(0.0005 * time) + 0.5,
-            g: 0.5 * Math.sin(0.0003 * time) + 0.5,
-            b: 0.5 * Math.sin(0.0001 * time) + 0.5
-        };
+        material.diffuse.color.setRGB(
+            0.5 * Math.sin(0.0005 * time) + 0.5,
+            0.5 * Math.sin(0.0003 * time) + 0.5,
+            0.5 * Math.sin(0.0001 * time) + 0.5
+        );
 
         /* Initialize frame buffer with color (0, 0, 0, 1). */
         gl.clearColor(0, 0, 0, 1);
